@@ -1,3 +1,3 @@
 export default function Home() {
-  return <main>jamful dev</main>;
+  return <main>jamful home page</main>;
 }
