@@ -1,7 +1,7 @@
 import Player from "./player";
 
 async function getData(id: string) {
-  const res = await fetch(`${process.env.API_URL}/recordings/${id}`);
+  const res = await fetch(`${process.env["API_URL"]}/recordings/${id}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
