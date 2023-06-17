@@ -18,7 +18,9 @@ export default async function Recordings() {
       <h2>Recordings</h2>
       <ul>
         {recordings.map((recording: any) => (
-          <Link href={`/recordings/${recording.id}`}>{recording.title}</Link>
+          <li key={`rec_${recording.id}`}>
+            <Link href={`/recordings/${recording.id}`}>{recording.title}</Link>
+          </li>
         ))}
       </ul>
     </>

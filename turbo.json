@@ -3,8 +3,9 @@
   "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "build": {
-      "dependsOn": ["^build", "$API_URL"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["API_URL"]
     },
     "lint": {},
     "dev": {
