@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node build/app.js",
+    "start:prod": "npm run build && npm start",
+    "dev": "ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +29,7 @@
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
+    "dbmate": "^2.4.0",
     "typescript": "^5.1.3"
   }
 }
