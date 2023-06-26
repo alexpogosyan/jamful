@@ -1,0 +1,3 @@
+{
+  "extends": "@jamful/tsconfig/base.json"
+}

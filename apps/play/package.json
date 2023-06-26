@@ -1,6 +1,6 @@
 {
-  "name": "play",
-  "version": "1.0.0",
+  "name": "@jamful/play",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,17 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^13.4.1",
+    "next": "^13.4.7",
     "react": "^18.2.0",
     "react-audio-player": "^0.17.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@jamful/eslint-config-custom": "*",
+    "@jamful/tsconfig": "*",
+    "@jamful/types": "*",
     "@types/node": "^17.0.12",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.2.5",
-    "eslint-config-custom": "*",
-    "tsconfig": "*",
     "typescript": "^5.1.3"
   }
 }
