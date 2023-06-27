@@ -1,4 +1,5 @@
 import Player from "./player";
+import * as Recording from "@jamful/types/recording";
 
 async function getData(id: string) {
   const res = await fetch(`${process.env["API_URL"]}/recordings/${id}`);
@@ -10,12 +11,12 @@ async function getData(id: string) {
   return res.json();
 }
 
-export default async function Recording({
+export default async function RecordingPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const recording = await getData(params.id);
+  const recording: Recording.Selectable = await getData(params.id);
 
   return (
     <main>

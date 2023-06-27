@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as Recording from "@jamful/types/recording";
 
 async function getData() {
   const res = await fetch(`${process.env.API_URL}/recordings`);
@@ -11,13 +12,13 @@ async function getData() {
 }
 
 export default async function Recordings() {
-  const recordings = await getData();
+  const recordings: Array<Recording.Selectable> = await getData();
 
   return (
     <main>
       <h1>Recordings</h1>
       <ul>
-        {recordings.map((recording: any) => (
+        {recordings.map((recording) => (
           <li key={`rec_${recording.id}`}>
             <Link href={`/recordings/${recording.id}`}>{recording.title}</Link>
           </li>
