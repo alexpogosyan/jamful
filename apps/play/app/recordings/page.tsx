@@ -14,8 +14,8 @@ export default async function Recordings() {
   const recordings = await getData();
 
   return (
-    <>
-      <h2>Recordings</h2>
+    <main>
+      <h1>Recordings</h1>
       <ul>
         {recordings.map((recording: any) => (
           <li key={`rec_${recording.id}`}>
@@ -23,6 +23,6 @@ export default async function Recordings() {
           </li>
         ))}
       </ul>
-    </>
+    </main>
   );
 }

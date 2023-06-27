@@ -7,10 +7,10 @@ interface Recording {
   updatedAt: string;
 }
 
-export interface RecordingSelectable extends Recording {
+export interface Selectable extends Recording {
   id: number;
 }
 
-export type RecordingUpdateable = Partial<Pick<Recording, "title" | "url">>;
+export type Updateable = Partial<Pick<Recording, "title" | "url">>;
 
-export type RecordingCreatable = Omit<Recording, "createdAt" | "updatedAt">;
+export type Creatable = Omit<Recording, "createdAt" | "updatedAt">;

@@ -18,9 +18,9 @@ export default async function Recording({
   const recording = await getData(params.id);
 
   return (
-    <>
+    <main>
       <h1>{recording.title}</h1>
       <Player url={recording.url} />
-    </>
+    </main>
   );
 }
