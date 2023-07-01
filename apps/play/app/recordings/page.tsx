@@ -12,7 +12,7 @@ async function getData() {
 }
 
 export default async function Recordings() {
-  const recordings: Array<Recording.Selectable> = await getData();
+  const recordings: Array<Recording.Gettable> = await getData();
 
   return (
     <main>

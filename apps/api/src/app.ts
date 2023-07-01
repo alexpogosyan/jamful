@@ -3,18 +3,17 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+
 import recordingsRoutes from "./routes/recordingsRoutes";
+import userRoutes from "./routes/userRoutes";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/hello", (req, res) => {
-  res.json("Hello World!");
-});
-
 app.use("/api/recordings", recordingsRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server listening on port ${process.env.PORT || 5000}`);

@@ -29,9 +29,9 @@
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "dbmate": "^2.4.0",
-    "typescript": "^5.1.3",
     "@jamful/tsconfig": "*",
-    "@jamful/types": "*"
+    "@jamful/types": "*",
+    "dbmate": "^2.4.0",
+    "typescript": "^5.1.3"
   }
 }

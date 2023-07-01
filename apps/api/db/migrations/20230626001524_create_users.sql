@@ -6,10 +6,11 @@ create table "users" (
     "passwordHash" text not null,
     "displayName" varchar(255),
     "bio" text,
-    "avatarUrl" text,
+    "avatar" text,
     "createdAt" timestamp default current_timestamp,
     "updatedAt" timestamp default current_timestamp
 );
 
 -- migrate:down
 drop table if exists "users";
+
