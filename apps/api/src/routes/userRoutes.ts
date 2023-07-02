@@ -6,9 +6,41 @@ import * as jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+router.post("/", async (req: Request, res: Response) => {
+  const { userId, email, password } = req.body;
+
+  try {
+    const user: User.Selectable = await userService.createUser(
+      userId,
+      email,
+      password
+    );
+
+    const token = jwt.sign(
+      {
+        userId: user.userId,
+        email: user.email,
+      },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "30d",
+      }
+    );
+
+    const data = {
+      token,
+      userId: user.userId,
+      email: user.email,
+    };
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send((err as Error).message);
+  }
+});
+
 router.post("/login", async (req: Request, res: Response) => {
   const { loginId, password } = req.body;
-  console.log("data", loginId, password);
 
   try {
     const user: User.Selectable | null = await userService.getByUserIdOrEmail(
