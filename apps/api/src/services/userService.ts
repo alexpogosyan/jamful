@@ -2,6 +2,7 @@ import pool from "../pgPool";
 import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
+import { ValidationError, DatabaseError } from "../errors";
 
 const getByUserIdOrEmail = async (
   loginId: string
@@ -31,7 +32,7 @@ const hashPassword = async (password: string) => {
   if (password && password.length > 0) {
     return await hash(password);
   } else {
-    throw new Error("Can't hash empty password");
+    throw new ValidationError("Can't use empty password");
   }
 };
 
@@ -67,30 +68,32 @@ const makeGettableUser = (user: User.Selectable): User.Gettable => {
   };
 };
 
-export const loginUser = async (
+export const login = async (
   loginId: string,
   password: string
 ): Promise<User.Gettable | null> => {
   const user: User.Selectable | null = await getByUserIdOrEmail(loginId);
 
-  const genericAuthError = "Wrong password or user doesn't exist.";
-
   if (!user) {
-    throw new Error(genericAuthError);
+    throw new ValidationError("Username or email is required.");
+  }
+
+  if (!password) {
+    throw new ValidationError("Can't use empty password");
   }
 
   const passwordMatch = checkPassword(password, user.passwordHash);
 
   if (!passwordMatch) {
     if (!passwordMatch) {
-      throw new Error(genericAuthError);
+      throw new ValidationError("Wrong password or user doesn't exist");
     }
   }
 
   return makeGettableUser(user);
 };
 
-export const createUser = async (
+export const create = async (
   userId: string,
   email: string,
   password: string
