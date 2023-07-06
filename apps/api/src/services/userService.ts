@@ -37,8 +37,7 @@ const hashPassword = async (password: string) => {
 };
 
 const checkPassword = async (submittedPassword: string, savedHash: string) => {
-  const submittedHash = await hashPassword(submittedPassword);
-  return verify(submittedHash, savedHash);
+  return;
 };
 
 const makeJwtToken = (user: User.Selectable) => {
@@ -82,12 +81,10 @@ export const login = async (
     throw new ValidationError("Can't use empty password");
   }
 
-  const passwordMatch = checkPassword(password, user.passwordHash);
+  const passwordMatch = verify(user.passwordHash, password);
 
   if (!passwordMatch) {
-    if (!passwordMatch) {
-      throw new ValidationError("Wrong password or user doesn't exist");
-    }
+    throw new ValidationError("Wrong password or user doesn't exist");
   }
 
   return makeGettableUser(user);
