@@ -25,6 +25,7 @@ export default function RootLayout({
           <Link href="/">
             <Image src="/jamful.svg" height={40} width={94} alt="logo" />
           </Link>
+          <Link href="/auth/login">Login</Link>
         </header>
         {children}
       </body>
