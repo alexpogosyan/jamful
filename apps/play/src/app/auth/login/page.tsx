@@ -2,7 +2,8 @@
 import * as User from "@jamful/types/user";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "../../jamful";
+import { login } from "../../../services/jamful";
+import { getErrorMessage } from "../../../utils/error";
 
 export default function LoginPage() {
   let [loginId, setLoginId] = useState("");
@@ -14,12 +15,9 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       const user = await login(loginId, password);
-      console.log("nextjs got user ", user);
       router.push("/");
     } catch (e) {
-      let message = "Unknown Error";
-      if (e instanceof Error) message = e.message;
-      setError(message);
+      setError(getErrorMessage(e));
     }
   };
 
