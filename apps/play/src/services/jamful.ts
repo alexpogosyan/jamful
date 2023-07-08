@@ -1,4 +1,5 @@
 import * as User from "@jamful/types/user";
+import Cookies from "js-cookie";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,8 +23,25 @@ export const login = async (
       const data = await res.json();
       throw new Error(data.message);
     }
+
+    const data = await res.json();
+    Cookies.set("token", data.token, { expires: 30 });
     return await res.json();
   } catch (error) {
     throw error;
   }
+};
+
+export const addRecording = async (title: string, audio: string) => {
+  const token = Cookies.get("token");
+  const res = await fetch(`${baseUrl}/users/login`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      audio: "",
+    }),
+  });
 };
