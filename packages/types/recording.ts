@@ -13,8 +13,9 @@ export type Selectable = Recording;
 
 export type Gettable = Recording;
 
+// TODO title required if it's a root Recording, otherwise it shouldn't have a title
 export type Postable = OptionalExcept<
-  Omit<Recording, "id" | "createdAt" | "updatedAt">,
+  Omit<Recording, "id" | "createdAt" | "updatedAt" | "artistId">,
   "title" | "url"
 >;
 

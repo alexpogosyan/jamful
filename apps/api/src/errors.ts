@@ -11,3 +11,10 @@ export class ValidationError extends Error {
     this.name = "ValidationError";
   }
 }
+
+export class AuthorizationError extends Error {
+  constructor() {
+    super("Authorization required");
+    this.name = "AuthorizationError";
+  }
+}

@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import * as userService from "../services/userService";
 import * as User from "@jamful/types/user";
+import { AuthorizationError } from "../errors";
 
 const router = express.Router();
 
@@ -36,5 +37,16 @@ router.post(
     }
   }
 );
+
+router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.userId;
+
+  try {
+    const u = await userService.getMe(userId);
+    res.status(200).json(u);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;

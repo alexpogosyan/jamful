@@ -2,7 +2,7 @@ import pool from "../pgPool";
 import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
-import { ValidationError, DatabaseError } from "../errors";
+import { ValidationError, DatabaseError, AuthorizationError } from "../errors";
 
 const getByUserIdOrEmail = async (
   loginId: string
@@ -36,15 +36,10 @@ const hashPassword = async (password: string) => {
   }
 };
 
-const checkPassword = async (submittedPassword: string, savedHash: string) => {
-  return;
-};
-
 const makeJwtToken = (user: User.Selectable) => {
   const token = jwt.sign(
     {
       userId: user.userId,
-      email: user.email,
     },
     process.env.JWT_SECRET!,
     {
@@ -67,6 +62,16 @@ const makeGettableUser = (user: User.Selectable): User.Gettable => {
   };
 };
 
+export const getMe = async (userId: string) => {
+  if (!userId) {
+    throw new AuthorizationError();
+  }
+
+  return new Promise((resolve, reject) => {
+    return resolve({ userId });
+  });
+};
+
 export const login = async (
   loginId: string,
   password: string
@@ -74,7 +79,7 @@ export const login = async (
   const user: User.Selectable | null = await getByUserIdOrEmail(loginId);
 
   if (!user) {
-    throw new ValidationError("Username or email is required.");
+    throw new ValidationError("Wrong password or user doesn't exist.");
   }
 
   if (!password) {
