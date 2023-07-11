@@ -13,8 +13,8 @@ export class ValidationError extends Error {
 }
 
 export class AuthorizationError extends Error {
-  constructor() {
-    super("Authorization required");
+  constructor(message: string) {
+    super(message);
     this.name = "AuthorizationError";
   }
 }

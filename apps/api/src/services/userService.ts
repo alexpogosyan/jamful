@@ -37,15 +37,9 @@ const hashPassword = async (password: string) => {
 };
 
 const makeJwtToken = (user: User.Selectable) => {
-  const token = jwt.sign(
-    {
-      userId: user.userId,
-    },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "30d",
-    }
-  );
+  const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET!, {
+    expiresIn: "30d",
+  });
   return token;
 };
 
@@ -62,14 +56,14 @@ const makeGettableUser = (user: User.Selectable): User.Gettable => {
   };
 };
 
-export const getMe = async (userId: string) => {
-  if (!userId) {
-    throw new AuthorizationError();
+export const getMe = async (userId: string): Promise<User.Gettable | null> => {
+  const user: User.Selectable | null = await getByUserIdOrEmail(userId);
+
+  if (!user) {
+    throw new ValidationError("Cant get someone who doesn't exist.");
   }
 
-  return new Promise((resolve, reject) => {
-    return resolve({ userId });
-  });
+  return makeGettableUser(user);
 };
 
 export const login = async (
@@ -86,7 +80,7 @@ export const login = async (
     throw new ValidationError("Can't use empty password");
   }
 
-  const passwordMatch = verify(user.passwordHash, password);
+  const passwordMatch = await verify(user.passwordHash, password);
 
   if (!passwordMatch) {
     throw new ValidationError("Wrong password or user doesn't exist");

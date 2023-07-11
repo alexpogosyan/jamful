@@ -52,20 +52,47 @@ export const authMiddleware = (
 ) => {
   console.log("Auth middleware");
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
 
-  console.log("Token:", token);
-
-  // If there's no token, we assume public endpoint was requested
-  if (!token) {
-    return next();
-  } else {
-    try {
-      const payload = <TokenPayload>jwt.verify(token, process.env.JWT_SECRET!);
-      req.userId = payload.userId;
-      next();
-    } catch (error) {
-      next();
-    }
+  if (!authHeader) {
+    return res.status(401).json({ message: "No token provided" });
   }
+
+  const token = authHeader && authHeader.split(" ")[1];
+  console.log("Header token:", token);
+
+  jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Token invalid" });
+    }
+
+    // if token is valid, set user id to request for further request operation
+    // @ts-ignore
+    req.userId = decoded.userId;
+    return next();
+  });
 };
+
+// const authMiddleware: express.RequestHandler = (req, res, next) => {
+//     // Extract the token from the Authorization header
+//     const authHeader = req.headers.authorization;
+//     const token = authHeader && authHeader.split(' ')[1];
+
+//     if (token == null) {
+//         // If no token, respond with 401 (Unauthorized)
+//         return res.sendStatus(401);
+//     }
+
+//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, user) => {
+//         if (err) {
+//             // If token is invalid, respond with 403 (Forbidden)
+//             return res.sendStatus(403);
+//         }
+
+//         // Attach the user information to the request
+//         req.user = user;
+
+//         next();
+//     });
+// };
+
+// export default authMiddleware;

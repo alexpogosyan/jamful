@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import * as userService from "../services/userService";
 import * as User from "@jamful/types/user";
 import { AuthorizationError } from "../errors";
+import { authMiddleware } from "../middleware";
 
 const router = express.Router();
 
@@ -38,15 +39,25 @@ router.post(
   }
 );
 
-router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.userId;
+router.get(
+  "/me",
+  authMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("getting /me");
+    const userId = req.userId;
 
-  try {
-    const u = await userService.getMe(userId);
-    res.status(200).json(u);
-  } catch (err) {
-    next(err);
+    try {
+      const u = await userService.getMe(userId);
+      if (u) {
+        res.status(200).json(u);
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "There was a problem finding the user" });
+    }
   }
-});
+);
 
 export default router;
