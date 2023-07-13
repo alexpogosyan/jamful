@@ -43,7 +43,6 @@ router.get(
   "/me",
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("getting /me");
     const userId = req.userId;
 
     try {
@@ -55,7 +54,7 @@ router.get(
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "There was a problem finding the user" });
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
