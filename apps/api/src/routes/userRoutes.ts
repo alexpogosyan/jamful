@@ -59,4 +59,26 @@ router.get(
   }
 );
 
+router.put(
+  "/me",
+  authMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.userId;
+
+    const { displayName, bio, avatar } = req.body;
+
+    try {
+      const u = await userService.updateMe(userId, displayName, bio, avatar);
+      if (u) {
+        res.status(200).json(u);
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
 export default router;

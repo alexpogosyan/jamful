@@ -56,10 +56,8 @@ export const authMiddleware = (
   }
 
   const token = authHeader && authHeader.split(" ")[1];
-  console.log("Header token:", token);
 
   jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
-    console.log("decoding:", err, decoded);
     if (err) {
       return res.status(401).json({ message: "Token invalid" });
     }

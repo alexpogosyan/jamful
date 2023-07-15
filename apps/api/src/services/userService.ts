@@ -2,7 +2,7 @@ import pool from "../pgPool";
 import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
-import { ValidationError, DatabaseError, AuthorizationError } from "../errors";
+import { ValidationError } from "../errors";
 
 const getByUserIdOrEmail = async (
   loginId: string
@@ -24,6 +24,19 @@ const insertNewUser = async (
   const result = await pool.query(
     `insert into users ("userId", "email", "passwordHash") values ($1, $2, $3) returning *`,
     [userId, email, passwordHash]
+  );
+  return result.rows[0];
+};
+
+const updateUser = async (
+  userId: string,
+  displayName: string,
+  bio: string,
+  avatar: string
+): Promise<User.Selectable> => {
+  const result = await pool.query(
+    `update users set "displayName" = $1, "bio" = $2, "avatar" = $3 where "userId" = $4 returning *`,
+    [displayName, bio, avatar, userId]
   );
   return result.rows[0];
 };
@@ -60,10 +73,30 @@ export const getMe = async (userId: string): Promise<User.Gettable | null> => {
   const user: User.Selectable | null = await getByUserIdOrEmail(userId);
 
   if (!user) {
-    throw new ValidationError("Cant get someone who doesn't exist.");
+    throw new ValidationError("User doesn't exist.");
   }
 
   return makeGettableUser(user);
+};
+
+export const updateMe = async (
+  userId: string,
+  displayName: string,
+  bio: string,
+  avatar: string
+) => {
+  const user: User.Selectable | null = await getByUserIdOrEmail(userId);
+  if (!user) {
+    throw new ValidationError("User doesn't exist.");
+  }
+
+  const updatedUser: User.Selectable = await updateUser(
+    userId,
+    displayName,
+    bio,
+    avatar
+  );
+  return makeGettableUser(updatedUser);
 };
 
 export const login = async (
