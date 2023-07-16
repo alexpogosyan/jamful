@@ -1,0 +1,14 @@
+.small { font-size: 12px; }
+.medium { font-size: 18px; }
+.large { font-size: 24px; }
+
+.regular { font-weight: 400; }
+.medium { font-weight: 500; }
+
+.xs { font-size: 11.1px; }
+.s { font-size: 13.3px; }
+.m { font-size: 16px; }
+.l { font-size: 19.2px; }
+.xl { font-size: 23px; }
+.h2 { font-size: 27.65px; }
+.h1 { font-size: 33.1px; }

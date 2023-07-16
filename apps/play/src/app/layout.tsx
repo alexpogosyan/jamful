@@ -4,8 +4,8 @@ import { Fira_Sans } from "next/font/google";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Jamful",
-  description: "Jamful: music collaboration",
+  title: "jamful",
+  description: "jamful: music collaboration",
 };
 
 const fira = Fira_Sans({
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={fira.className}>
         <header>
           <Link href="/">
-            <Image src="/jamful.svg" height={40} width={94} alt="logo" />
+            <Image src="/jamful.png" alt="logo" width={134} height={50} />
           </Link>
           <Link href="/auth/login">Login</Link>
         </header>
