@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Text from "../components/Text/Text";
+import { Button } from "../components/Button/Button";
 
 export default function Home() {
   return (
