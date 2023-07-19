@@ -15,9 +15,11 @@ const Text: React.FC<TextProps> = ({
   weight = "regular",
   children,
 }) => {
+  const classNames = `${styles[size]} ${styles[weight]}`;
+
   const element = size.startsWith("h")
-    ? React.createElement(size, null, children)
-    : React.createElement("p", null, children);
+    ? React.createElement(size, { className: classNames }, children)
+    : React.createElement("p", { className: classNames }, children);
   return element;
 };
 

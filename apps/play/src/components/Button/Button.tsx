@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./Button.module.css";
 
 interface ButtonProps {
