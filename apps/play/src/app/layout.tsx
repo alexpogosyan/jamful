@@ -1,5 +1,5 @@
-import Image from "next/image";
 import "./globals.css";
+import Image from "next/image";
 import { Fira_Sans } from "next/font/google";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 const fira = Fira_Sans({
-  weight: "400",
+  weight: ["200", "300", "400"],
   subsets: ["latin"],
 });
 
