@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import styles from "./Text.module.css";
 
 type TextSize = "xs" | "s" | "m" | "l" | "xl" | "h2" | "h1";
-type TextWeight = "regular" | "medium" | "semibold";
+type TextWeight = "light" | "regular" | "medium";
 
 interface TextProps {
   size?: TextSize;

@@ -1,10 +1,11 @@
-.regular { font-weight: 400; }
-.medium { font-weight: 500; }
+.light { font-weight: var(--font-light); }
+.regular { font-weight: var(--font-regular); }
+.medium { font-weight: var(--font-medium); }
 
-.xs { font-size: 11.1px; }
-.s { font-size: 13.3px; }
-.m { font-size: 16px; }
-.l { font-size: 19.2px; }
-.xl { font-size: 23px; }
-.h2 { font-size: 27.65px; }
-.h1 { font-size: 33.1px; }
+.xs { font-size: var(--font-xs); }
+.s { font-size: var(--font-s); }
+.m { font-size: var(--font-m); }
+.l { font-size: var(--font-l); }
+.xl { font-size: var(--font-xl); }
+.h2 { font-size: var(--font-h2); }
+.h1 { font-size: var(--font-h1); }

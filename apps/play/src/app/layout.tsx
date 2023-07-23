@@ -2,6 +2,7 @@ import "./globals.css";
 import Image from "next/image";
 import { Fira_Sans } from "next/font/google";
 import Link from "next/link";
++import { Header } from "../components/Header/Header";
 
 export const metadata = {
   title: "jamful",
@@ -21,12 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fira.className}>
-        <header>
-          <Link href="/">
-            <Image src="/jamful.png" alt="logo" width={134} height={50} />
-          </Link>
-          <Link href="/auth/login">Login</Link>
-        </header>
+        <Header user={null} />
         {children}
       </body>
     </html>
