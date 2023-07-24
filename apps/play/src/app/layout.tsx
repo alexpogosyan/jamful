@@ -1,8 +1,6 @@
 import "./globals.css";
-import Image from "next/image";
 import { Fira_Sans } from "next/font/google";
-import Link from "next/link";
-+import { Header } from "../components/Header/Header";
+import { Header } from "../components/Header/Header";
 
 export const metadata = {
   title: "jamful",

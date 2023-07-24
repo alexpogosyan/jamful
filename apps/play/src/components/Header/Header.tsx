@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import * as User from "@jamful/types/user";
 import styles from "./Header.module.css";
-import logo from "../../../public/jamful.png";
+import logo from "../../../public/jamful.svg";
 import { Button } from "../Button/Button";
 
 interface HeaderProps {
