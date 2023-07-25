@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "../../../services/jamful";
 import { getErrorMessage } from "../../../utils/error";
+import Text from "../../../components/Text/Text";
+import { Input } from "../../../components/Input/Input";
+import { Button } from "../../../components/Button/Button";
+import styles from "./page.module.css";
 
 export default function LoginPage() {
   let [loginId, setLoginId] = useState("");
@@ -23,20 +27,27 @@ export default function LoginPage() {
 
   return (
     <main>
-      <div>
-        <h1>Please login</h1>
-        <p>Error: {error}</p>
-        <input
-          type="text"
+      <div className={styles.mainWrapper}>
+        <Text size="h1">Log in to jamful</Text>
+        {error && <p className={styles.error}>{error}</p>}
+        <Input
           value={loginId}
-          onChange={(e) => setLoginId(e.target.value)}
-        ></input>
-        <input
-          type="password"
+          onChange={(e) => {
+            setLoginId(e.target.value);
+          }}
+          label="Email or username"
+          placeholder="Email or username"
+        />
+        <Input
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-        <button onClick={handleLogin}>Login</button>
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          label="Password"
+          placeholder="Password"
+        />
+
+        <Button label="Log in" onClick={handleLogin} />
       </div>
     </main>
   );

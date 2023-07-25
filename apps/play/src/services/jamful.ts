@@ -19,14 +19,14 @@ export const login = async (
       }),
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      const data = await res.json();
       throw new Error(data.message);
     }
 
-    const data = await res.json();
     Cookies.set("token", data.token, { expires: 30 });
-    return await res.json();
+    return data;
   } catch (error) {
     throw error;
   }
