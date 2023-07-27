@@ -6,3 +6,7 @@
 .error {
     color: #d23a3a;
 }
+
+.fieldWrapper {
+    margin-bottom: 1rem;
+}

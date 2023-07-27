@@ -24,3 +24,7 @@
 .secondary:hover {
     background-color: #e5e5e5;
 }
+
+.fullwidth {
+    width: 100%;
+}
