@@ -7,8 +7,6 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Error middleware");
-
   switch (err.name) {
     case "DatabaseError":
       console.error(err);
@@ -49,22 +47,17 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.token;
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "No token provided" });
-  }
+  if (!token) return res.status(401).json({ error: "No token provided" });
 
-  const token = authHeader && authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Token invalid" });
-    }
-
-    // if token is valid, set user id to request for further request operation
     // @ts-ignore
     req.userId = decoded.userId;
-    next();
-  });
+  } catch (err) {
+    return res.status(401).json({ message: "Token invalid" });
+  }
+  next();
 };

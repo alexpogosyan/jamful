@@ -14,9 +14,7 @@ interface User {
 
 export type Selectable = User;
 
-export type Gettable = Omit<User, "id" | "passwordHash"> & {
-  token: string;
-};
+export type Gettable = Omit<User, "id" | "passwordHash">;
 
 export type Puttable = Partial<
   Omit<User, "id" | "createdAt" | "updatedAt" | "passwordHash">

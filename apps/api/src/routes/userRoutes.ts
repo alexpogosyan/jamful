@@ -28,16 +28,32 @@ router.post(
     const { loginId, password } = req.body;
 
     try {
-      const user: User.Gettable | null = await userService.login(
+      const user: User.Gettable = await userService.authenticate(
         loginId,
         password
       );
+
+      const jwtToken = userService.makeJwtToken(user);
+
+      res.cookie("token", jwtToken, {
+        httpOnly: true,
+        // secure: process.env.NODE_ENV !== 'development',
+        sameSite: "strict",
+        maxAge: 3600,
+        path: "/",
+      });
+
       res.status(200).json(user);
     } catch (err) {
       next(err);
     }
   }
 );
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ success: true });
+});
 
 router.get(
   "/me",

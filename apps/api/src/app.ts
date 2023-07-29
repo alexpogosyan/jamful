@@ -6,10 +6,12 @@ import cors from "cors";
 import recordingsRoutes from "./routes/recordingsRoutes";
 import userRoutes from "./routes/userRoutes";
 import { errorMiddleware, authMiddleware } from "./middleware";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/recordings", recordingsRoutes);

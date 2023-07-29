@@ -49,9 +49,9 @@ const hashPassword = async (password: string) => {
   }
 };
 
-const makeJwtToken = (user: User.Selectable) => {
+export const makeJwtToken = (user: User.Gettable) => {
   const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET!, {
-    expiresIn: "30d",
+    expiresIn: "1h",
   });
   return token;
 };
@@ -65,7 +65,6 @@ const makeGettableUser = (user: User.Selectable): User.Gettable => {
     avatar: user.avatar,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
-    token: makeJwtToken(user),
   };
 };
 
@@ -76,7 +75,7 @@ export const getMe = async (userId: string): Promise<User.Gettable | null> => {
     throw new ValidationError("User doesn't exist.");
   }
 
-  return makeGettableUser(user);
+  return user;
 };
 
 export const updateMe = async (
@@ -96,21 +95,18 @@ export const updateMe = async (
     bio,
     avatar
   );
-  return makeGettableUser(updatedUser);
+
+  return updateUser;
 };
 
-export const login = async (
+export const authenticate = async (
   loginId: string,
   password: string
-): Promise<User.Gettable | null> => {
+): Promise<User.Gettable> => {
   const user: User.Selectable | null = await getByUserIdOrEmail(loginId);
 
-  if (!user) {
+  if (!user || !password) {
     throw new ValidationError("Wrong password or user doesn't exist.");
-  }
-
-  if (!password) {
-    throw new ValidationError("Can't use empty password");
   }
 
   const passwordMatch = await verify(user.passwordHash, password);
@@ -119,7 +115,7 @@ export const login = async (
     throw new ValidationError("Wrong password or user doesn't exist");
   }
 
-  return makeGettableUser(user);
+  return user;
 };
 
 export const create = async (
@@ -128,6 +124,5 @@ export const create = async (
   password: string
 ): Promise<User.Gettable> => {
   const user: User.Selectable = await insertNewUser(userId, email, password);
-
-  return makeGettableUser(user);
+  return user;
 };
