@@ -2,7 +2,7 @@ import pool from "../pgPool";
 import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
-import { ValidationError } from "../errors";
+import { AuthorizationError, ValidationError } from "../errors";
 
 const getByUserIdOrEmail = async (
   loginId: string
@@ -106,13 +106,13 @@ export const authenticate = async (
   const user: User.Selectable | null = await getByUserIdOrEmail(loginId);
 
   if (!user || !password) {
-    throw new ValidationError("Wrong password or user doesn't exist.");
+    throw new AuthorizationError();
   }
 
   const passwordMatch = await verify(user.passwordHash, password);
 
   if (!passwordMatch) {
-    throw new ValidationError("Wrong password or user doesn't exist");
+    throw new AuthorizationError();
   }
 
   return user;

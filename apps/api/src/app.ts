@@ -5,7 +5,6 @@ import express from "express";
 import cors from "cors";
 import recordingsRoutes from "./routes/recordingsRoutes";
 import userRoutes from "./routes/userRoutes";
-import { errorMiddleware, authMiddleware } from "./middleware";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -16,8 +15,6 @@ app.use(express.json());
 
 app.use("/api/recordings", recordingsRoutes);
 app.use("/api/users", userRoutes);
-
-app.use(errorMiddleware);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server listening on port ${process.env.PORT || 5000}`);

@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import * as userService from "../services/userService";
 import * as User from "@jamful/types/user";
-import { AuthorizationError } from "../errors";
 import { authMiddleware } from "../middleware";
 
 const router = express.Router();
@@ -16,9 +15,21 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       password
     );
 
+    const jwtToken = userService.makeJwtToken(user);
+
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      // secure: process.env.NODE_ENV !== "development",
+      // sameSite: "strict",
+      maxAge: 3600,
+      path: "/",
+    });
+
     res.status(200).json(user);
   } catch (err) {
-    next(err);
+    res.status(500).json({
+      errorCode: "server_error",
+    });
   }
 });
 
@@ -37,15 +48,23 @@ router.post(
 
       res.cookie("token", jwtToken, {
         httpOnly: true,
-        // secure: process.env.NODE_ENV !== 'development',
-        sameSite: "strict",
+        // secure: process.env.NODE_ENV !== "development",
+        // sameSite: "strict",
         maxAge: 3600,
         path: "/",
       });
 
       res.status(200).json(user);
     } catch (err) {
-      next(err);
+      if (err instanceof Error && err.name === "AuthorizationError") {
+        res.status(401).json({
+          errorCode: "wrong_user_or_password",
+        });
+      } else {
+        res.status(500).json({
+          errorCode: "server_error",
+        });
+      }
     }
   }
 );

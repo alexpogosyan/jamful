@@ -1,33 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 
-export const errorMiddleware = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  switch (err.name) {
-    case "DatabaseError":
-      console.error(err);
-      res.status(500).json({ message: "An internal server error occurred." });
-      break;
-    case "ValidationError":
-      res.status(400).json({ message: err.message });
-      break;
-    case "AuthorizationError":
-      res.status(403).json({ message: err.message });
-      break;
-    default:
-      console.error(err);
-      res.status(500).json({ message: "An internal server error occurred." });
-  }
-};
-
-interface TokenPayload {
-  userId: string;
-}
-
 declare global {
   namespace Express {
     interface Request {
@@ -49,7 +22,7 @@ export const authMiddleware = (
 ) => {
   const token = req.cookies.token;
 
-  if (!token) return res.status(401).json({ error: "No token provided" });
+  if (!token) return res.status(401).json({ errorCode: "token_not_provided" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
@@ -57,7 +30,7 @@ export const authMiddleware = (
     // @ts-ignore
     req.userId = decoded.userId;
   } catch (err) {
-    return res.status(401).json({ message: "Token invalid" });
+    return res.status(401).json({ errorCode: "invalid_token" });
   }
   next();
 };
