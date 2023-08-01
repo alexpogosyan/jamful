@@ -23,6 +23,22 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
   }
 }
 
-export function getErrorMessage(error: unknown) {
+export function getUnknownErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message;
 }
+
+const messages: { [key: string]: string } = {
+  wrong_user_or_password: "Incorrect password or user does not exist.",
+  unknown_error: "Unexpected error has occured.",
+};
+
+export const getErrorMessage = (err: any) => {
+  const code = err.response?.data?.errorCode;
+  console.log("code", code, code in messages);
+  if (code in messages) {
+    return messages[code];
+  } else {
+    console.error("Unknown error: ", getUnknownErrorMessage(err));
+    return messages.unknown_error;
+  }
+};

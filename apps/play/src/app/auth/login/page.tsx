@@ -9,6 +9,8 @@ import { Input } from "../../../components/Input/Input";
 import { Button } from "../../../components/Button/Button";
 import styles from "./page.module.css";
 import { Spacer } from "../../../components/Spacer/Spacer";
+import { useContext } from "react";
+import { AuthContext } from "../../layout";
 
 export default function LoginPage() {
   let [loginId, setLoginId] = useState("");
@@ -17,13 +19,22 @@ export default function LoginPage() {
 
   const router = useRouter();
 
+  // @ts-ignore
+  const { auth, setAuth } = useContext(AuthContext);
+
   const handleLogin = async () => {
+    setError("");
+
     try {
       const user = await login(loginId, password);
-      console.log("user:", user);
+
+      setAuth({
+        userId: user.userId,
+      });
+
       router.push("/");
-    } catch (e) {
-      setError(getErrorMessage(e));
+    } catch (e: any) {
+      setError(e.message);
     }
   };
 
@@ -49,6 +60,7 @@ export default function LoginPage() {
           }}
           label="Password"
           placeholder="Password"
+          type="password"
         />
         <Spacer h="1.5rem" />
         <Button label="Log in" onClick={handleLogin} fullwidth={true} />
