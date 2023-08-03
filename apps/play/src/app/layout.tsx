@@ -1,9 +1,8 @@
 "use client";
 import "./globals.css";
 import { Fira_Sans } from "next/font/google";
-import { Header } from "../components/Header/Header";
-import { createContext, useState, ReactNode } from "react";
-import {} from "react";
+import { useState, ReactNode } from "react";
+import App from "../components/App/App";
 
 export const metadata = {
   title: "jamful",
@@ -15,19 +14,6 @@ const fira = Fira_Sans({
   subsets: ["latin"],
 });
 
-interface IAuth {
-  userId: string;
-}
-interface IAuthContext {
-  auth: IAuth;
-  setAuth: any;
-}
-
-export const AuthContext = createContext<IAuthContext>({
-  auth: { userId: "" },
-  setAuth: () => {},
-});
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState({ userId: "" });
   const value = { auth, setAuth };
@@ -35,10 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={fira.className}>
-        <AuthContext.Provider value={value}>
-          <Header />
-          {children}
-        </AuthContext.Provider>
+        <App>{children}</App>
       </body>
     </html>
   );
