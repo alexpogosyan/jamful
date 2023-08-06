@@ -19,7 +19,7 @@ export const Button = (props: ButtonProps) => {
 
   const classNames = `${styles.button} ${styles[variant]} ${
     fullwidth ? styles.fullwidth : ""
-  }`;
+  } ${disabled ? styles.disabled : ""}`;
 
   return (
     <button
