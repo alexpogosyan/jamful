@@ -9,6 +9,9 @@ import { Input } from "../../../components/Input/Input";
 import { Button } from "../../../components/Button/Button";
 import styles from "./page.module.css";
 import { Spacer } from "../../../components/Spacer/Spacer";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../../../store/authService";
+import { setAuth } from "../../../store/authSlice";
 
 export default function LoginPage() {
   let [loginId, setLoginId] = useState("");
@@ -17,11 +20,16 @@ export default function LoginPage() {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+
   const handleLogin = async () => {
     setError("");
 
     try {
-      const user = await login(loginId, password);
+      const user = await login({ loginId, password }).unwrap();
+      dispatch(setAuth(user));
 
       router.push("/");
     } catch (e: any) {
