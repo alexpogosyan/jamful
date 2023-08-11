@@ -14,33 +14,40 @@ import { setAuth } from "../../../store/slices/authSlice";
 export default function SignUp() {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const router = useRouter();
 
   const dispatch = useDispatch();
 
-  const [register, { isLoading }] = useRegisterMutation();
+  // const [register, { isLoading, error }] = useRegisterMutation();
+  const [register, { error, isError, isLoading }] = useRegisterMutation();
 
-  const handleLogin = async () => {
-    setError("");
-
+  const handleSignup = async () => {
     try {
       const user = await register({ email, password }).unwrap();
       dispatch(setAuth(user));
-
       router.push("/");
     } catch (e: any) {
-      setError(e.message);
+      // TODO what goes here?
     }
   };
+
+  let errorMsg;
+
+  if (error) {
+    if ("status" in error) {
+      errorMsg = "error" in error ? error.error : JSON.stringify(error.data);
+    } else {
+      errorMsg = error.message;
+    }
+  }
 
   return (
     <main>
       <div className={styles.mainWrapper}>
         <Text size="h1">Sign up</Text>
         <Spacer h="1rem" />
-        {error && <p className={styles.error}>{error}</p>}
+        {isError && <p className={styles.error}>{errorMsg}</p>}
         <Input
           value={email}
           onChange={(e) => {
@@ -62,7 +69,7 @@ export default function SignUp() {
         <Spacer h="1.5rem" />
         <Button
           label="Sign up"
-          onClick={handleLogin}
+          onClick={handleSignup}
           fullwidth={true}
           disabled={isLoading}
         />

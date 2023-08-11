@@ -28,6 +28,10 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       res.status(400).json({
         errorCode: "empty_password_not_allowed",
       });
+    } else if (err instanceof Error && err.name === "DatabaseError") {
+      res.status(409).json({
+        errorCode: "email_already_exists",
+      });
     } else {
       res.status(500).json({
         errorCode: "server_error",

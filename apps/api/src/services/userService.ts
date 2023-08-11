@@ -2,7 +2,7 @@ import pool from "../pgPool";
 import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
-import { AuthorizationError, ValidationError } from "../errors";
+import { AuthorizationError, DatabaseError, ValidationError } from "../errors";
 import { customAlphabet } from "nanoid";
 
 const getByUserIdOrEmail = async (
@@ -29,11 +29,18 @@ const insertNewUser = async (
   const userId = generateUserId;
   const passwordHash = await hashPassword(password);
 
-  const result = await pool.query(
-    `insert into users ("userId", "email", "passwordHash") values ($1, $2, $3) returning *`,
-    [userId, email, passwordHash]
-  );
-  return result.rows[0];
+  try {
+    const result = await pool.query(
+      `insert into users ("userId", "email", "passwordHash") values ($1, $2, $3) returning *`,
+      [userId, email, passwordHash]
+    );
+    return result.rows[0];
+  } catch (err: any) {
+    if (err.constraint === "users_email_key") {
+      throw new DatabaseError("email_already_exists");
+    }
+    throw Error("server_error");
+  }
 };
 
 const updateUser = async (
