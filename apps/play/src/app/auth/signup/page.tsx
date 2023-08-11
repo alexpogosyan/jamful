@@ -8,11 +8,11 @@ import { Button } from "../../../components/Button/Button";
 import styles from "./page.module.css";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import { useDispatch } from "react-redux";
-import { useLoginMutation } from "../../../store/slices/authService";
+import { useRegisterMutation } from "../../../store/slices/authService";
 import { setAuth } from "../../../store/slices/authSlice";
 
-export default function LoginPage() {
-  let [loginId, setLoginId] = useState("");
+export default function SignUp() {
+  let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -20,13 +20,13 @@ export default function LoginPage() {
 
   const dispatch = useDispatch();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleLogin = async () => {
     setError("");
 
     try {
-      const user = await login({ loginId, password }).unwrap();
+      const user = await register({ email, password }).unwrap();
       dispatch(setAuth(user));
 
       router.push("/");
@@ -38,16 +38,16 @@ export default function LoginPage() {
   return (
     <main>
       <div className={styles.mainWrapper}>
-        <Text size="h1">Log in to jamful</Text>
+        <Text size="h1">Sign up</Text>
         <Spacer h="1rem" />
         {error && <p className={styles.error}>{error}</p>}
         <Input
-          value={loginId}
+          value={email}
           onChange={(e) => {
-            setLoginId(e.target.value);
+            setEmail(e.target.value);
           }}
-          label="Email or username"
-          placeholder="Email or username"
+          label="What's your email?"
+          placeholder="Enter your email"
         />
         <Spacer h="1rem" />
         <Input
@@ -55,13 +55,13 @@ export default function LoginPage() {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
-          label="Password"
-          placeholder="Password"
+          label="Create a password"
+          placeholder="Enter your password"
           type="password"
         />
         <Spacer h="1.5rem" />
         <Button
-          label="Log in"
+          label="Sign up"
           onClick={handleLogin}
           fullwidth={true}
           disabled={isLoading}

@@ -1,0 +1,12 @@
+.mainWrapper {
+    width: 340px;
+    margin: 140px auto 0 auto;
+}
+
+.error {
+    color: #d23a3a;
+}
+
+.fieldWrapper {
+    margin-bottom: 1rem;
+}

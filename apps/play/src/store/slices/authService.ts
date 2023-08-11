@@ -12,11 +12,23 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
   endpoints: (builder) => ({
+    register: builder.mutation<UserResponse, RegisterRequest>({
+      query: (credentials) => ({
+        url: "/users/",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
         url: "/users/login",
@@ -27,4 +39,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation } = api;
+export const { useLoginMutation, useRegisterMutation } = api;

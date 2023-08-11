@@ -3,6 +3,7 @@ import * as User from "@jamful/types/user";
 import { verify, hash } from "argon2";
 import * as jwt from "jsonwebtoken";
 import { AuthorizationError, ValidationError } from "../errors";
+import { customAlphabet } from "nanoid";
 
 const getByUserIdOrEmail = async (
   loginId: string
@@ -14,11 +15,18 @@ const getByUserIdOrEmail = async (
   return result.rows[0];
 };
 
+// Good enough for up to 1 million users
+const generateUserId = () => {
+  const alphabet = "0123456789";
+  const generator = customAlphabet(alphabet, 14);
+  return `user${generator()}`;
+};
+
 const insertNewUser = async (
-  userId: string,
   email: string,
   password: string
 ): Promise<User.Selectable> => {
+  const userId = generateUserId;
   const passwordHash = await hashPassword(password);
 
   const result = await pool.query(
@@ -45,7 +53,7 @@ const hashPassword = async (password: string) => {
   if (password && password.length > 0) {
     return await hash(password);
   } else {
-    throw new ValidationError("Can't use empty password");
+    throw new ValidationError("empty_password_not_allowed");
   }
 };
 
@@ -56,23 +64,11 @@ export const makeJwtToken = (user: User.Gettable) => {
   return token;
 };
 
-const makeGettableUser = (user: User.Selectable): User.Gettable => {
-  return {
-    userId: user.userId,
-    email: user.email,
-    displayName: user.displayName,
-    bio: user.bio,
-    avatar: user.avatar,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
-};
-
 export const getMe = async (userId: string): Promise<User.Gettable | null> => {
   const user: User.Selectable | null = await getByUserIdOrEmail(userId);
 
   if (!user) {
-    throw new ValidationError("User doesn't exist.");
+    throw new ValidationError("user_does_not_exist");
   }
 
   return user;
@@ -83,10 +79,10 @@ export const updateMe = async (
   displayName: string,
   bio: string,
   avatar: string
-) => {
+): Promise<User.Gettable> => {
   const user: User.Selectable | null = await getByUserIdOrEmail(userId);
   if (!user) {
-    throw new ValidationError("User doesn't exist.");
+    throw new ValidationError("user_does_not_exist");
   }
 
   const updatedUser: User.Selectable = await updateUser(
@@ -96,7 +92,7 @@ export const updateMe = async (
     avatar
   );
 
-  return updateUser;
+  return updatedUser;
 };
 
 export const authenticate = async (
@@ -119,10 +115,9 @@ export const authenticate = async (
 };
 
 export const create = async (
-  userId: string,
   email: string,
   password: string
 ): Promise<User.Gettable> => {
-  const user: User.Selectable = await insertNewUser(userId, email, password);
+  const user: User.Selectable = await insertNewUser(email, password);
   return user;
 };

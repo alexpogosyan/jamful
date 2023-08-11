@@ -1,35 +1,38 @@
 import express, { NextFunction, Request, Response } from "express";
 import * as userService from "../services/userService";
 import * as User from "@jamful/types/user";
+import { AUTH_COOKIE_NAME, AUTH_COOKIE_AGE } from "@jamful/types/constants";
 import { authMiddleware } from "../middleware";
 
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  const { userId, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user: User.Gettable = await userService.create(
-      userId,
-      email,
-      password
-    );
+    const user: User.Gettable = await userService.create(email, password);
 
     const jwtToken = userService.makeJwtToken(user);
 
-    res.cookie("token", jwtToken, {
+    res.cookie(AUTH_COOKIE_NAME, jwtToken, {
       httpOnly: true,
-      // secure: process.env.NODE_ENV !== "development",
-      // sameSite: "strict",
-      maxAge: 3600,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: AUTH_COOKIE_AGE,
       path: "/",
     });
 
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({
-      errorCode: "server_error",
-    });
+    if (err instanceof Error && err.name === "ValidationError") {
+      res.status(400).json({
+        errorCode: "empty_password_not_allowed",
+      });
+    } else {
+      res.status(500).json({
+        errorCode: "server_error",
+      });
+    }
   }
 });
 
@@ -46,11 +49,11 @@ router.post(
 
       const jwtToken = userService.makeJwtToken(user);
 
-      res.cookie("token", jwtToken, {
+      res.cookie(AUTH_COOKIE_NAME, jwtToken, {
         httpOnly: true,
-        // secure: process.env.NODE_ENV !== "development",
-        // sameSite: "strict",
-        maxAge: 3600,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: AUTH_COOKIE_AGE,
         path: "/",
       });
 
@@ -70,8 +73,8 @@ router.post(
 );
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.json({ success: true });
+  res.clearCookie(AUTH_COOKIE_NAME);
+  res.status(200);
 });
 
 router.get(
@@ -81,15 +84,11 @@ router.get(
     const userId = req.userId;
 
     try {
-      const u = await userService.getMe(userId);
-      if (u) {
-        res.status(200).json(u);
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
+      const user = await userService.getMe(userId);
+      res.status(200).json(user);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ errorCode: "server_error" });
     }
   }
 );
@@ -103,15 +102,18 @@ router.put(
     const { displayName, bio, avatar } = req.body;
 
     try {
-      const u = await userService.updateMe(userId, displayName, bio, avatar);
-      if (u) {
-        res.status(200).json(u);
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
+      const user = await userService.updateMe(userId, displayName, bio, avatar);
+      res.status(200).json(user);
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error" });
+      if (err instanceof Error && err.name === "AuthorizationError") {
+        res.status(401).json({
+          errorCode: "unauthorized_request",
+        });
+      } else {
+        res.status(500).json({
+          errorCode: "server_error",
+        });
+      }
     }
   }
 );
