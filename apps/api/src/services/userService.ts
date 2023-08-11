@@ -26,7 +26,7 @@ const insertNewUser = async (
   email: string,
   password: string
 ): Promise<User.Selectable> => {
-  const userId = generateUserId;
+  const userId = generateUserId();
   const passwordHash = await hashPassword(password);
 
   try {
