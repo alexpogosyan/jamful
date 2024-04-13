@@ -1,6 +1,0 @@
-{
-  "extends": "@jamful/tsconfig/base.json",
-  "compilerOptions": {
-    "outDir": "./build"
-  }
-}
