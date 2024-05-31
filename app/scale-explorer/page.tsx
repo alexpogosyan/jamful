@@ -1,5 +1,5 @@
 "use client";
-import Keyboard from "@/ui/Keyboard/Keyboard";
+import Keyboard from "@/components/Keyboard/Keyboard";
 import { useState } from "react";
 import { scales } from "./scales";
 
@@ -17,7 +17,7 @@ export default function HomePage() {
       <select
         value={scaleIndex}
         onChange={handleChange}
-        className="block  rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+        className="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
       >
         {scales.map((scale, index) => (
           <option key={scale.name} value={index}>
