@@ -20,11 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${GeistSans.variable} font-sans`}>
-        <div className="flex w-full flex-1 flex-col items-center gap-20">
+        <div className="flex min-h-screen w-full flex-col">
           <Header />
-          {children}
-          <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
-            &copy;Jamful
+          <div className="flex-1">{children}</div>
+          <footer className="flex h-16 w-full items-center justify-center border-t border-t-foreground/10 bg-gray-700 text-center text-sm text-gray-100">
+            &copy; 2024 Jamful
           </footer>
         </div>
       </body>

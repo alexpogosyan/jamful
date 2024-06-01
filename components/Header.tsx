@@ -16,22 +16,24 @@ export default async function Header() {
     .from("profiles")
     .select()
     .eq("id", user?.id)
-    .single();
+    .maybeSingle();
 
   return (
     <div className="flex h-16 w-full items-center justify-between border-b px-4">
       <Logo />
-      <MainNav className="mx-6" />
-      {user ? (
-        <UserNav user={user} profile={profile} />
-      ) : (
-        <Link
-          href="/login"
-          className={cn(buttonVariants({ variant: "ghost" }))}
-        >
-          Login
-        </Link>
-      )}
+      <div className="flex items-center gap-x-4">
+        <MainNav className="mx-6" />
+        {user ? (
+          <UserNav user={user} profile={profile} />
+        ) : (
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ variant: "secondary" }))}
+          >
+            Login
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

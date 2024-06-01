@@ -11,16 +11,10 @@ export function MainNav({
       {...props}
     >
       <Link
-        href="/scale-explorer"
+        href="/practice"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
-        Scale Explorer
-      </Link>
-      <Link
-        href="/ear-trainer"
-        className="text-sm font-medium transition-colors hover:text-primary" // text-muted-foreground
-      >
-        Ear Trainer
+        Practice Tools
       </Link>
     </nav>
   );
